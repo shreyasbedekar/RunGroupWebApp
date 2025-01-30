@@ -11,6 +11,9 @@
         Pilates,
         CrossFit,
         WeightLifting,
+        City,
+        Endurance,
+        Trail,
         Other
     }
 }
