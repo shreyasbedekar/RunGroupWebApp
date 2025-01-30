@@ -13,7 +13,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 var app = builder.Build();
 
-if(args.Length ==1 && args[0].ToLower() == "seed")
+if(args.Length ==1 && args[0].ToLower() == "seeddata")
 {
     Seed.SeedData(app);
 }
