@@ -63,5 +63,82 @@ namespace RunGroupWebApp.Controllers
             }
             return View(clubVM);
         }
+
+        public async Task<IActionResult> Edit(int id)
+        {
+            var club = await _clubRepository.GetByIdAsync(id);
+            if(club == null)
+            {
+                return View("Error");
+            }
+            var clubVM = new EditClubViewModel
+            {
+                Id = club.Id,
+                Title = club.Title,
+                Description = club.Description,
+                AddressId = club.AddressId,
+                Address = club.Address,
+                URL = club.Image,
+                ClubCategory = club.ClubCategory
+            };
+            return View(clubVM);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, EditClubViewModel clubVM)
+        {
+            if (ModelState.IsValid)
+            {
+                var userClub = await _clubRepository.GetByIdAysncNoTracking(id);
+                try
+                {
+                    await _photoService.DeletePhotoAsync(userClub.Image);
+                }
+                catch(Exception ex)
+                {
+                    ModelState.AddModelError("", "Could not delete photo");
+                    return View(clubVM);
+                }
+                var photoResult = await _photoService.AddPhotoAsync(clubVM.Image);
+                var club = new Club
+                {
+                    Id = clubVM.Id,
+                    Title = clubVM.Title,
+                    Description = clubVM.Description,
+                    Image = photoResult.Url.ToString(),
+                    AddressId = clubVM.AddressId,
+                    Address = clubVM.Address
+                }; 
+                _clubRepository.Update(club);
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return View(clubVM);
+            }
+
+        }
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            var club = await _clubRepository.GetByIdAsync(id);
+            if(club == null)
+            {
+                return View("Error");
+            }
+            return View(club);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        public async Task<IActionResult> DeleteClub(int id)
+        {
+            var club = await _clubRepository.GetByIdAsync(id);
+            if(club == null)
+            {
+                return View("Error");
+            }
+            _clubRepository.Delete(club);
+            return RedirectToAction("Index");
+        }
     }
 }
