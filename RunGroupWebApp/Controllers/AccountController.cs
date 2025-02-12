@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using RunGroupWebApp.Data;
+using RunGroupWebApp.Interfaces;
 using RunGroupWebApp.Models;
 using RunGroupWebApp.ViewModels;
 
@@ -11,12 +12,15 @@ namespace RunGroupWebApp.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly ApplicationDbContext _context;
+        private readonly ILocationService _locationService;
 
-        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, ApplicationDbContext context)
+        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, ApplicationDbContext context,
+            ILocationService locationService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _context = context;
+            _locationService = locationService;
         }
         public IActionResult Login()
         {
@@ -49,7 +53,7 @@ namespace RunGroupWebApp.Controllers
             }
             return View(loginViewModel);
         }
-
+        [HttpGet]
         public IActionResult Register()
         {
             var response = new RegisterViewModel();
@@ -82,11 +86,35 @@ namespace RunGroupWebApp.Controllers
             return RedirectToAction("Index","Race");
         }
 
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Race");
         }
+
+        [HttpGet]
+        [Route("Account/Welcome")]
+        public async Task<IActionResult> Welcome(int page = 0)
+        {
+            if (page == 0)
+            {
+                return View();
+            }
+            return View();
+
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetLocation(string location)
+        {
+            if (location == null)
+            {
+                return Json("Not found");
+            }
+            var locationResult = await _locationService.GetLocationSearch(location);
+            return Json(locationResult);
+        }
+
     }
 }
