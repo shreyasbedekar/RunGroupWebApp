@@ -58,7 +58,7 @@
             {
                 <li class="col-12 col-md-6 col-lg-4">
                     <div class="card">
-                        <a type="button" asp-controller="Club" asp-action="DetailClub" asp-route-runningClub="@club.Title.GenerateSlug()" asp-route-id="@club.Id">
+                        <a type="button" asp-controller="Club" asp-action="Details" asp-route-runningClub="@club.Title.GenerateSlug()" asp-route-id="@club.Id">
                             @if (@club.Image != null)
                             {
                                 <img class="card-img-top" src="@club.Image" alt="Card image cap">
@@ -78,7 +78,7 @@
                             <div>
                                 <small>@club.ClubCategory</small>
                             </div>
-                            @if (isAuthenticated && User.IsInRole("admin"))
+                            @if (isAuthenticated && User.IsInRole("Admin"))
                             {
                                 <div>
                                     <a type="button" class="btn btn-sm btn-outline-info" asp-controller="Club" asp-action="Edit" asp-route-id="@club.Id">

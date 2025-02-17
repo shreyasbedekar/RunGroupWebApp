@@ -97,8 +97,8 @@ namespace RunGroupWebApp.Controllers
 
         [HttpGet]
         [Route("club/{runningClub}/{id}")]
-        public async Task<IActionResult> DetailClub(int id, string runningClub)
-        {
+        public async Task<IActionResult> Details(int id, string runningClub)
+            {
             var club = await _clubRepository.GetByIdAsync(id);
 
             return club == null ? NotFound() : View(club);

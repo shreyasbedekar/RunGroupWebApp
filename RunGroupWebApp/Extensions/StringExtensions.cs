@@ -27,7 +27,7 @@ namespace RunGroupWebApp.Extensions
 
         public static string RemoveAccent(this string txt)
         {
-            byte[] bytes = System.Text.Encoding.GetEncoding("Cyrillic").GetBytes(txt);
+            byte[] bytes = System.Text.Encoding.UTF8.GetBytes(txt);
             return System.Text.Encoding.ASCII.GetString(bytes);
         }
     }
